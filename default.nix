@@ -30,6 +30,7 @@ rec {
         ];
         extensions = ["rust-src"];
     })
+    cargo
 
     # Synthesis
     ghdl
