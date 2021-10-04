@@ -3,12 +3,16 @@ rec {
   sources = (import ./nix/sources.nix);
 
   # Pinned nixpkgs with overlays applied
-  pkgs = import sources.pkgs {
+  # don't switch back to stable before 21.11
+  pkgs = import sources.pkgsUnstable {
     overlays = [
       (import ./overlay.nix)
       (import sources.moz-overlay)
     ];
   };
+  
+  # Ugly hack. Sometimes I just hate Nix
+  vm = ((import "${sources.pkgsUnstable}/nixos") {}).vm;
 
   # This takes a `pkgs` as input in case you don't want to use the pinned versions.
   # besaid `pkgs` needs to have both overlays (above) in some way or another nevertheless.

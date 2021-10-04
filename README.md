@@ -44,7 +44,7 @@ Nix installation or as a standalone OS. Login: `alice`:`foobar`
 
 ```sh
 # Build
-nix-build '<nixpkgs/nixos>' -A vm -I nixos-config=./vm.nix
+nix-build -A vm -I nixos-config=./vm.nix
 
 # Run
 ./result/bin/run-nixos-vm
