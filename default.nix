@@ -18,19 +18,22 @@ rec {
   # besaid `pkgs` needs to have both overlays (above) in some way or another nevertheless.
   packages = pkgs: with pkgs; [
     # GCC & Rust
+    pkgs.pkgsCross.riscv32-embedded.stdenv.cc 
     pkgs.pkgsCross.riscv32-embedded.stdenv.cc # Cross-GCC for riscv32-none-elf; rv32im
     pkgs.pkgsCross.arm-embedded.stdenv.cc # Cross-GCC for arm-none-eabi
+    pkgs.latest.rustChannels.nightly.cargo
     (pkgs.latest.rustChannels.nightly.rust.override {
         targets = [
             "armv7-unknown-linux-gnueabihf" # Cross-compile for a Pi with NixOS
             "armv7-unknown-linux-musleabihf" # Cross-compile for a Pi with Raspbian
             # Cross-compile for RISC-V. See https://www.reddit.com/r/rust/comments/ke8w6t/modular_riscv_isa_target_for_rust/
+            # and https://users.rust-lang.org/t/compile-for-riscv32im-unknown-none-elf/64597
+            "riscv32i-unknown-none-elf"
             "riscv32imc-unknown-none-elf"
             "riscv32imac-unknown-none-elf"
         ];
         extensions = ["rust-src"];
     })
-    cargo
 
     # Synthesis
     ghdl
@@ -51,9 +54,10 @@ rec {
     yices
 
     # Debugging
+    gdb-multitarget
     openocd
-    #openocd-vexriscv # https://github.com/SpinalHDL/openocd_riscv/issues/17
-    riscv-openocd
+    openocd-vexriscv
+    #riscv-openocd
     ujprog
     fujprog
     gtkterm
