@@ -69,5 +69,6 @@ If you are already on NixOS or using Home-Manager, you can do the following to b
 ## Maintenance
 
 Run `niv update`. Manually packaged applications must be checked for updates manually.
+The pinned Rust nightly toolchain must be updated manually.
 Test with `nix-shell --pure`, because that's the one with pinned dependencies.
 TODO add automatic tests for the different applications.

@@ -13,16 +13,20 @@ rec {
   
   # Ugly hack. Sometimes I just hate Nix
   vm = ((import "${sources.pkgsUnstable}/nixos") {}).vm;
+  
+  rustChannel = pkgs: pkgs.rustChannelOf { date = "2021-10-08"; channel = "nightly"; };
 
   # This takes a `pkgs` as input in case you don't want to use the pinned versions.
   # besaid `pkgs` needs to have both overlays (above) in some way or another nevertheless.
-  packages = pkgs: with pkgs; [
+  packages = pkgs: let
+    rustChannel2 = rustChannel pkgs;
+  in with pkgs; [
     # GCC & Rust
     pkgs.pkgsCross.riscv32-embedded.stdenv.cc 
     pkgs.pkgsCross.riscv32-embedded.stdenv.cc # Cross-GCC for riscv32-none-elf; rv32im
     pkgs.pkgsCross.arm-embedded.stdenv.cc # Cross-GCC for arm-none-eabi
-    pkgs.latest.rustChannels.nightly.cargo
-    (pkgs.latest.rustChannels.nightly.rust.override {
+    rustChannel2.cargo
+    (rustChannel2.rust.override {
         targets = [
             "armv7-unknown-linux-gnueabihf" # Cross-compile for a Pi with NixOS
             "armv7-unknown-linux-musleabihf" # Cross-compile for a Pi with Raspbian
