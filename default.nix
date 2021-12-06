@@ -3,8 +3,7 @@ rec {
   sources = (import ./nix/sources.nix);
 
   # Pinned nixpkgs with overlays applied
-  # don't switch back to stable before 21.11
-  pkgs = import sources.pkgsUnstable {
+  pkgs = import sources.pkgs {
     overlays = [
       (import ./overlay.nix)
       (import sources.moz-overlay)
@@ -14,15 +13,15 @@ rec {
   # Ugly hack. Sometimes I just hate Nix
   vm = ((import "${sources.pkgsUnstable}/nixos") {}).vm;
   
-  rustChannel = pkgs: pkgs.rustChannelOf { date = "2021-10-08"; channel = "nightly"; };
+  # This takes a `pkgs` as input in case you don't want to use the pinned versions.
+  rustChannel = pkgs: pkgs.rustChannelOf { date = "2021-12-06"; channel = "nightly"; };
 
   # This takes a `pkgs` as input in case you don't want to use the pinned versions.
   # besaid `pkgs` needs to have both overlays (above) in some way or another nevertheless.
   packages = pkgs: let
     rustChannel2 = rustChannel pkgs;
   in with pkgs; [
-    # GCC & Rust
-    pkgs.pkgsCross.riscv32-embedded.stdenv.cc 
+    # GCC & Rust 
     pkgs.pkgsCross.riscv32-embedded.stdenv.cc # Cross-GCC for riscv32-none-elf; rv32im
     pkgs.pkgsCross.arm-embedded.stdenv.cc # Cross-GCC for arm-none-eabi
     rustChannel2.cargo
@@ -61,7 +60,7 @@ rec {
     gdb-multitarget
     openocd
     openocd-vexriscv
-    #riscv-openocd
+    riscv-openocd
     ujprog
     fujprog
     gtkterm
