@@ -14,7 +14,7 @@ rec {
   vm = ((import "${sources.pkgsUnstable}/nixos") {}).vm;
   
   # This takes a `pkgs` as input in case you don't want to use the pinned versions.
-  rustChannel = pkgs: pkgs.rustChannelOf { date = "2021-12-06"; channel = "nightly"; };
+  rustChannel = pkgs: pkgs.rustChannelOf { date = "2022-01-04"; channel = "nightly"; };
 
   # This takes a `pkgs` as input in case you don't want to use the pinned versions.
   # besaid `pkgs` needs to have both overlays (above) in some way or another nevertheless.
