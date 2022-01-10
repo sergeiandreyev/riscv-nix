@@ -27,6 +27,7 @@
       mv $out/bin/openocd $out/bin/openocd-vexriscv
     '';
   });
+
   riscv-openocd = pkgs.openocd.overrideAttrs (old: {
     pname = "riscv-openocd";
     src = pkgs.fetchFromGitHub {
@@ -42,8 +43,30 @@
       mv $out/bin/openocd $out/bin/riscv-openocd
     '';
   });
+  
+  # OpenROAD must be used with a custom Yosys version (taken from https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)
+  yosys = super.yosys.overrideAttrs (old: {
+    version = "custom-unstable-2022-11-12";
+    src = pkgs.fetchFromGitHub {
+      owner = "The-OpenROAD-Project";
+      repo = "yosys";
+      rev = "014c7e26b85000e99a27d2287a6967daa64d7a30";
+      sha256 = "0pmf9fmyzx5rwqxf0hhg92kaiccvwcf418hgj981vsvlb9ck6n04";
+    };
+    preBuild = ''
+      make config-gcc
+    '';
+    makeFlags = [
+      "ABCEXTERNAL=${pkgs.abc-verifier}/bin/abc"
+      "PREFIX=${placeholder "out"}"
+    ];
+    doCheck = false;
+  });
 
   # Other custom packages
   ujprog = pkgs.callPackage ./pkgs/ujprog.nix {};
   gtkterm = pkgs.callPackage ./pkgs/gtkterm.nix {};
+  LSOracle = pkgs.callPackage ./pkgs/LSOracle/default.nix {};
+  LEMON = pkgs.callPackage ./pkgs/Lemon/default.nix {};
+  OpenROAD = pkgs.callPackage ./pkgs/OpenROAD/default.nix {};
 })

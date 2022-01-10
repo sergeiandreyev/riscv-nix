@@ -21,7 +21,7 @@ rec {
   packages = pkgs: let
     rustChannel2 = rustChannel pkgs;
   in with pkgs; [
-    # GCC & Rust 
+    # Compilers
     pkgs.pkgsCross.riscv32-embedded.stdenv.cc # Cross-GCC for riscv32-none-elf; rv32im
     pkgs.pkgsCross.arm-embedded.stdenv.cc # Cross-GCC for arm-none-eabi
     rustChannel2.cargo
@@ -37,6 +37,7 @@ rec {
         ];
         extensions = ["rust-src"];
     })
+    clang
 
     # Synthesis
     ghdl
@@ -55,6 +56,7 @@ rec {
     # Formal verification
     symbiyosys
     yices
+    abc-verifier
 
     # Debugging
     gdb-multitarget
@@ -73,5 +75,11 @@ rec {
     # Command runners
     gnumake
     just
+    
+    # Unsorted
+    LSOracle
+    OpenROAD
+    klayout
+    magic-vlsi
   ];
 }
