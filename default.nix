@@ -81,5 +81,6 @@ rec {
     OpenROAD
     klayout
     magic-vlsi
+    ecpprog
   ];
 }

@@ -69,4 +69,5 @@
   LSOracle = pkgs.callPackage ./pkgs/LSOracle/default.nix {};
   LEMON = pkgs.callPackage ./pkgs/Lemon/default.nix {};
   OpenROAD = pkgs.callPackage ./pkgs/OpenROAD/default.nix {};
+  ecpprog = pkgs.callPackage ./pkgs/ecpprog/default.nix {};
 })
