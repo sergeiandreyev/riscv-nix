@@ -43,8 +43,8 @@ Build a QEMU VM running GNOME with all these tools installed. It can also be dep
 Nix installation or as a standalone OS. Login: `alice`:`foobar`
 
 ```sh
-# Build
-nix-build -A vm -I nixos-config=./vm.nix
+# Build (must be called in the `riscv-nix` directory)
+nix-build -A vm -I nixos-config=./vm.nix ./default.nix
 
 # Run
 ./result/bin/run-nixos-vm
