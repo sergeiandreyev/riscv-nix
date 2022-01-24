@@ -37,17 +37,29 @@ source ~/.nix-profile/etc/profile.d/nix.sh
 See [the manual](https://nixos.org/manual/nix/stable/index.html#sect-single-user-installation) for
 more detailed instructions.
 
-### GNOME VM
+### GNOME VM (QEMU)
 
 Build a QEMU VM running GNOME with all these tools installed. It can also be deployed on hosts without
 Nix installation or as a standalone OS. Login: `alice`:`foobar`
 
 ```sh
 # Build (must be called in the `riscv-nix` directory)
-nix-build -A vm -I nixos-config=./vm.nix ./default.nix
+nix-build -A vm ./default.nix
 
 # Run
 ./result/bin/run-nixos-vm
+```
+
+### GNOME VM (VirtualBox image)
+
+This option has the advantage that the produced image is independent from the host's Nix installation and store.
+The price is that building the image takes a lot longer and the result is a lot larger.
+
+```sh
+# Build (must be called in the `riscv-nix` directory)
+nix-build -A vm-image ./default.nix
+
+# Now ./result will be a symlink to the built image
 ```
 
 ### Nix shell

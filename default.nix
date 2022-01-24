@@ -1,4 +1,4 @@
-rec {
+let
   # Pinned things with Niv
   sources = (import ./nix/sources.nix);
 
@@ -9,10 +9,19 @@ rec {
       (import sources.moz-overlay)
     ];
   };
+
+  # Evaluate our NixOS configuration
+  config = (import "${sources.pkgs}/nixos" {
+    configuration = ./vm.nix;
+  });
   
-  # Ugly hack. Sometimes I just hate Nix
-  vm = ((import "${sources.pkgsUnstable}/nixos") {}).vm;
-  
+  # NixOS virtualization using Qemu. Image relies on the local /nix/store
+  vm = config.vm;
+  # Full VirtualBox image
+  vm-image = config.config.system.build.virtualBoxOVA;
+in rec {
+  inherit sources pkgs vm vm-image config;
+
   # This takes a `pkgs` as input in case you don't want to use the pinned versions.
   rustChannel = pkgs: pkgs.rustChannelOf { date = "2022-01-04"; channel = "nightly"; };
 
@@ -38,6 +47,7 @@ rec {
         extensions = ["rust-src"];
     })
     clang
+    cargo-bloat
 
     # Synthesis
     ghdl
